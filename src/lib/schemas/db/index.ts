@@ -412,8 +412,7 @@ export const NestedIntNullableFilterSchema: z.ZodType<Prisma.NestedIntNullableFi
 // ARGS
 /////////////////////////////////////////
 
-export const UserFindFirstArgsSchema: z.ZodType<Prisma.UserFindFirstArgs> = z.object({
-  select: UserSelectSchema.optional(),
+export const UserFindFirstArgsSchema: z.ZodType<Omit<Prisma.UserFindFirstArgs, "select">> = z.object({
   where: UserWhereInputSchema.optional(),
   orderBy: z.union([ UserOrderByWithRelationInputSchema.array(),UserOrderByWithRelationInputSchema ]).optional(),
   cursor: UserWhereUniqueInputSchema.optional(),
@@ -422,8 +421,7 @@ export const UserFindFirstArgsSchema: z.ZodType<Prisma.UserFindFirstArgs> = z.ob
   distinct: z.union([ UserScalarFieldEnumSchema,UserScalarFieldEnumSchema.array() ]).optional(),
 }).strict() ;
 
-export const UserFindFirstOrThrowArgsSchema: z.ZodType<Prisma.UserFindFirstOrThrowArgs> = z.object({
-  select: UserSelectSchema.optional(),
+export const UserFindFirstOrThrowArgsSchema: z.ZodType<Omit<Prisma.UserFindFirstOrThrowArgs, "select">> = z.object({
   where: UserWhereInputSchema.optional(),
   orderBy: z.union([ UserOrderByWithRelationInputSchema.array(),UserOrderByWithRelationInputSchema ]).optional(),
   cursor: UserWhereUniqueInputSchema.optional(),
@@ -432,8 +430,7 @@ export const UserFindFirstOrThrowArgsSchema: z.ZodType<Prisma.UserFindFirstOrThr
   distinct: z.union([ UserScalarFieldEnumSchema,UserScalarFieldEnumSchema.array() ]).optional(),
 }).strict() ;
 
-export const UserFindManyArgsSchema: z.ZodType<Prisma.UserFindManyArgs> = z.object({
-  select: UserSelectSchema.optional(),
+export const UserFindManyArgsSchema: z.ZodType<Omit<Prisma.UserFindManyArgs, "select">> = z.object({
   where: UserWhereInputSchema.optional(),
   orderBy: z.union([ UserOrderByWithRelationInputSchema.array(),UserOrderByWithRelationInputSchema ]).optional(),
   cursor: UserWhereUniqueInputSchema.optional(),
@@ -459,23 +456,19 @@ export const UserGroupByArgsSchema: z.ZodType<Prisma.UserGroupByArgs> = z.object
   skip: z.number().optional(),
 }).strict() ;
 
-export const UserFindUniqueArgsSchema: z.ZodType<Prisma.UserFindUniqueArgs> = z.object({
-  select: UserSelectSchema.optional(),
+export const UserFindUniqueArgsSchema: z.ZodType<Omit<Prisma.UserFindUniqueArgs, "select">> = z.object({
   where: UserWhereUniqueInputSchema,
 }).strict() ;
 
-export const UserFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.UserFindUniqueOrThrowArgs> = z.object({
-  select: UserSelectSchema.optional(),
+export const UserFindUniqueOrThrowArgsSchema: z.ZodType<Omit<Prisma.UserFindUniqueOrThrowArgs, "select">> = z.object({
   where: UserWhereUniqueInputSchema,
 }).strict() ;
 
-export const UserCreateArgsSchema: z.ZodType<Prisma.UserCreateArgs> = z.object({
-  select: UserSelectSchema.optional(),
+export const UserCreateArgsSchema: z.ZodType<Omit<Prisma.UserCreateArgs, "select">> = z.object({
   data: z.union([ UserCreateInputSchema,UserUncheckedCreateInputSchema ]),
 }).strict() ;
 
-export const UserUpsertArgsSchema: z.ZodType<Prisma.UserUpsertArgs> = z.object({
-  select: UserSelectSchema.optional(),
+export const UserUpsertArgsSchema: z.ZodType<Omit<Prisma.UserUpsertArgs, "select">> = z.object({
   where: UserWhereUniqueInputSchema,
   create: z.union([ UserCreateInputSchema,UserUncheckedCreateInputSchema ]),
   update: z.union([ UserUpdateInputSchema,UserUncheckedUpdateInputSchema ]),
@@ -491,13 +484,11 @@ export const UserCreateManyAndReturnArgsSchema: z.ZodType<Prisma.UserCreateManyA
   skipDuplicates: z.boolean().optional(),
 }).strict() ;
 
-export const UserDeleteArgsSchema: z.ZodType<Prisma.UserDeleteArgs> = z.object({
-  select: UserSelectSchema.optional(),
+export const UserDeleteArgsSchema: z.ZodType<Omit<Prisma.UserDeleteArgs, "select">> = z.object({
   where: UserWhereUniqueInputSchema,
 }).strict() ;
 
-export const UserUpdateArgsSchema: z.ZodType<Prisma.UserUpdateArgs> = z.object({
-  select: UserSelectSchema.optional(),
+export const UserUpdateArgsSchema: z.ZodType<Omit<Prisma.UserUpdateArgs, "select">> = z.object({
   data: z.union([ UserUpdateInputSchema,UserUncheckedUpdateInputSchema ]),
   where: UserWhereUniqueInputSchema,
 }).strict() ;
