@@ -36,4 +36,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/src/lib/schemas/db/
+/src/lib/schemas/db
