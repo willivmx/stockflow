@@ -7,7 +7,6 @@ generator zod {
   output                           = "../src/lib/schemas/db"
   createOptionalDefaultValuesTypes = true
   writeNullishInModelTypes         = true
-  addSelectType                    = false
 }
 
 generator erd {
@@ -21,7 +20,5 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id String @id @default(uuid())
 }
