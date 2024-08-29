@@ -1,7 +1,6 @@
 import Logo from "@/components/logo";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div></div>
-  );
+  return redirect("/dashboard");
 }
