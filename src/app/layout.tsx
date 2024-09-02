@@ -3,8 +3,13 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import QueryClient from "@/lib/queryClient";
 import NextAuthProvider from "@/lib/auth/Provider";
+import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
   title: "Stockflow",
@@ -26,10 +31,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body
+        className={cn(
+          "min-h-screen bg-background antialiased",
+          inter.className,
+        )}
+      >
         <QueryClient>
-          <NextAuthProvider>{children}</NextAuthProvider>
+          <NextAuthProvider>
+            <div vaul-drawer-wrapper="" className="bg-background">
+              {children}
+            </div>
+          </NextAuthProvider>
         </QueryClient>
+
+        <Toaster position="top-center" />
       </body>
     </html>
   );

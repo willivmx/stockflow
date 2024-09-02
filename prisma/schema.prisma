@@ -7,6 +7,7 @@ generator zod {
   output                           = "../src/lib/schemas/db"
   createOptionalDefaultValuesTypes = true
   writeNullishInModelTypes         = true
+  createPartialTypes               = true
 }
 
 generator erd {
@@ -84,6 +85,7 @@ model Store {
   userEmail  String     @unique
   products   Product[]
   categories Category[]
+  orders     Order[]
 }
 
 model Product {
@@ -94,9 +96,9 @@ model Product {
   description String
   price       Float
   store       Store    @relation(fields: [storeId], references: [id])
-  storeId     String   @unique
+  storeId     String
   category    Category @relation(fields: [categoryId], references: [id])
-  categoryId  String   @unique
+  categoryId  String
   orders      Order[]
 }
 
@@ -107,7 +109,7 @@ model Category {
   name        String
   description String
   store       Store     @relation(fields: [storeId], references: [id])
-  storeId     String    @unique
+  storeId     String
   products    Product[]
 }
 
@@ -116,6 +118,8 @@ model Order {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   product   Product  @relation(fields: [productId], references: [id])
-  productId String   @unique
+  productId String
   quantity  Int
+  store     Store    @relation(fields: [storeId], references: [id])
+  storeId   String
 }

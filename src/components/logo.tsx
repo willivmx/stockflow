@@ -13,7 +13,7 @@ const Logo = ({
   return (
     <Link
       href={"/"}
-      className="inline-flex items-center justify-center cursor-pointer overflow-hidden rounded-[50px]"
+      className="inline-flex items-center justify-center cursor-pointer"
     >
       <Image
         src="/assets/logo/logo.svg"
