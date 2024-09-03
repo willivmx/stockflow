@@ -89,17 +89,18 @@ model Store {
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  name        String
-  description String
-  price       Float
-  store       Store    @relation(fields: [storeId], references: [id])
-  storeId     String
-  category    Category @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  orders      Order[]
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  name            String
+  description     String
+  price           Float
+  store           Store    @relation(fields: [storeId], references: [id])
+  storeId         String
+  category        Category @relation(fields: [categoryId], references: [id])
+  categoryId      String
+  orders          Order[]
+  quantityInStock Int      @default(0)
 }
 
 model Category {

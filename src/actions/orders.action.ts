@@ -39,9 +39,25 @@ export const addOrders = async (data: any) => {
       throw new Error("Invalid data");
     }
 
-    return await prisma.order.create({
+    await prisma.order.create({
       data: { ...parsedData.data, store: { connect: { id: storeId } } },
     });
+
+    await prisma.product.update({
+      where: {
+        id: data.productId,
+      },
+      data: {
+        quantityInStock: {
+          decrement: data.quantity,
+        },
+      },
+      include: {
+        orders: true,
+      },
+    });
+
+    return;
   } catch (error: any) {
     throw new Error(error);
   }

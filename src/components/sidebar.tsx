@@ -51,7 +51,7 @@ const Sidebar = () => {
   return (
     <div
       className={
-        "w-[16em] bg-secondary p-1 flex flex-col justify-between shadow-lg"
+        "w-[16em] bg-secondary p-1 flex flex-col justify-between shadow-lg top-0 left-0 sticky"
       }
     >
       <div className={"flex flex-col gap-4"}>

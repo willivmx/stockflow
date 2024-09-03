@@ -55,7 +55,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { getProducts } from "@/actions/products.action";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { cn } from "@/lib/utils";
+import { cn, FormatCFA } from "@/lib/utils";
 
 const formSchema = z.object({
   productId: z.string().min(1, "Le produit est obligatoire"),
@@ -109,7 +109,7 @@ const Page = () => {
       ),
     },
     {
-      title: "Ajoutée le",
+      title: "Créée le",
       row: (order: Order) => (
         <TableCell>
           {format(new Date(order.createdAt).toLocaleDateString(), "dd LLL y", {
@@ -130,7 +130,9 @@ const Page = () => {
     {
       title: "PU",
       row: (order: Order & Record<"product", Product>) => (
-        <TableCell className="text-right">{order.product.price}</TableCell>
+        <TableCell className="text-right">
+          {FormatCFA(order.product.price)}
+        </TableCell>
       ),
       style: {
         align: "right",
@@ -162,8 +164,12 @@ const Page = () => {
     createOrderMutation.mutate(values);
   }
 
+  const maxQuantity =
+    products.filter((p) => p.id === form.watch("productId"))[0]
+      ?.quantityInStock || 0;
+
   return (
-    <div className={"flex flex-col gap-12"}>
+    <div className={"flex flex-col gap-12 px-20"}>
       <Header
         title={"Commandes"}
         actions={[
@@ -226,28 +232,33 @@ const Page = () => {
                                       Aucun produit trouvé.
                                     </CommandEmpty>
                                     <CommandGroup>
-                                      {products.map((product) => (
-                                        <CommandItem
-                                          value={product.id}
-                                          key={product.id}
-                                          onSelect={() => {
-                                            form.setValue(
-                                              "productId",
-                                              product.id,
-                                            );
-                                          }}
-                                        >
-                                          {product.name}
-                                          <CheckIcon
-                                            className={cn(
-                                              "ml-auto h-4 w-4",
-                                              product.id === field.value
-                                                ? "opacity-100"
-                                                : "opacity-0",
-                                            )}
-                                          />
-                                        </CommandItem>
-                                      ))}
+                                      {products
+                                        .filter(
+                                          (product) =>
+                                            product.quantityInStock > 0,
+                                        )
+                                        .map((product) => (
+                                          <CommandItem
+                                            value={product.id}
+                                            key={product.id}
+                                            onSelect={() => {
+                                              form.setValue(
+                                                "productId",
+                                                product.id,
+                                              );
+                                            }}
+                                          >
+                                            {product.name}
+                                            <CheckIcon
+                                              className={cn(
+                                                "ml-auto h-4 w-4",
+                                                product.id === field.value
+                                                  ? "opacity-100"
+                                                  : "opacity-0",
+                                              )}
+                                            />
+                                          </CommandItem>
+                                        ))}
                                     </CommandGroup>
                                   </CommandList>
                                 </Command>
@@ -270,6 +281,7 @@ const Page = () => {
                               placeholder="Saisissez la quantité"
                               {...field}
                               min={1}
+                              max={maxQuantity}
                               onChange={(e) => {
                                 form.setValue(
                                   "quantity",
@@ -335,7 +347,6 @@ const Page = () => {
               {TABLE_COLUMNS.map((column, index) => (
                 <React.Fragment key={index}>{column.row(order)}</React.Fragment>
               ))}
-              {/*
               <TableCell className="flex justify-end items-center gap-2">
                 <Credenza>
                   <CredenzaTrigger asChild>
@@ -378,7 +389,6 @@ const Page = () => {
                   </CredenzaContent>
                 </Credenza>
               </TableCell>
-*/}
             </TableRow>
           ))}
         </TableBody>

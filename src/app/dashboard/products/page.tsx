@@ -40,7 +40,7 @@ import {
   deleteProduct,
   getProducts,
 } from "@/actions/products.action";
-import { Product, Category } from "@/lib/schemas/db";
+import { Product, Category, Order } from "@/lib/schemas/db";
 import { fr } from "date-fns/locale";
 import { format } from "date-fns";
 import { Loader2, Trash2 } from "lucide-react";
@@ -60,12 +60,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { getCategories } from "@/actions/categories.action";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { cn } from "@/lib/utils";
+import { cn, FormatCFA } from "@/lib/utils";
 
 const formSchema = z.object({
   name: z.string().min(1, "Le nom est obligatoire"),
   description: z.string().optional(),
-  price: z.number().min(0, "Le prix doit être positif"),
+  price: z.number().min(1, "Le prix doit être supérieur à 1"),
+  quantity: z.number().min(1, "La quantité doit être supérieure à 1"),
   categoryId: z.string().min(1, "La catégorie est obligatoire"),
 });
 
@@ -133,9 +134,27 @@ const Page = () => {
       ),
     },
     {
-      title: "Prix",
+      title: "P.U",
       row: (product: Product) => (
-        <TableCell className="text-right">{product.price} FCFA</TableCell>
+        <TableCell className="text-right">{FormatCFA(product.price)}</TableCell>
+      ),
+      style: {
+        align: "right",
+      },
+    },
+    {
+      title: "Quantité en stock",
+      row: (product: Product) => (
+        <TableCell className="text-right">{product.quantityInStock}</TableCell>
+      ),
+      style: {
+        align: "right",
+      },
+    },
+    {
+      title: "Ventes",
+      row: (product: Product & Record<"orders", Order[]>) => (
+        <TableCell className="text-right">{product.orders.length}</TableCell>
       ),
       style: {
         align: "right",
@@ -155,20 +174,6 @@ const Page = () => {
         </TableCell>
       ),
     },
-    {
-      title: "Modifié le",
-      row: (product: Product) => (
-        <TableCell>
-          {format(
-            new Date(product.updatedAt).toLocaleDateString(),
-            "dd LLL y",
-            {
-              locale: fr,
-            },
-          )}
-        </TableCell>
-      ),
-    },
   ];
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -177,6 +182,7 @@ const Page = () => {
       name: "",
       description: "-",
       price: 1,
+      quantity: 1,
       categoryId: "",
     },
   });
@@ -186,7 +192,7 @@ const Page = () => {
   }
 
   return (
-    <div className={"flex flex-col gap-12"}>
+    <div className={"flex flex-col gap-12 px-20"}>
       <Header
         title={"Produits"}
         actions={[
@@ -248,11 +254,33 @@ const Page = () => {
                           <FormControl>
                             <Input
                               type="number"
-                              placeholder="Saisissez le prix"
                               {...field}
                               min={1}
                               onChange={(e) => {
                                 form.setValue("price", Number(e.target.value));
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="quantity"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Quantité en stock</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...field}
+                              min={1}
+                              onChange={(e) => {
+                                form.setValue(
+                                  "quantity",
+                                  Number(e.target.value),
+                                );
                               }}
                             />
                           </FormControl>
@@ -296,7 +324,7 @@ const Page = () => {
                                   />
                                   <CommandList>
                                     <CommandEmpty>
-                                      No framework found.
+                                      Aucune catégorie trouvée.
                                     </CommandEmpty>
                                     <CommandGroup>
                                       {categories.map((category) => (
@@ -389,7 +417,14 @@ const Page = () => {
               <TableCell className="flex justify-end items-center gap-2">
                 <Credenza>
                   <CredenzaTrigger asChild>
-                    <Button variant={"destructive"} size={"icon"}>
+                    <Button
+                      variant={"destructive"}
+                      size={"icon"}
+                      disabled={
+                        deleteProductMutation.isPending ||
+                        product.orders.length > 0
+                      }
+                    >
                       <Trash2 size={18} />
                     </Button>
                   </CredenzaTrigger>

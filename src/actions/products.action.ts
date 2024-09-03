@@ -40,11 +40,19 @@ export const addProduct = async (data: any) => {
       price: data.price,
       store: { connect: { id: storeId } },
       category: { connect: { id: data.categoryId } },
+      quantityInStock: data.quantity,
     });
 
     if (!parsedData.success) {
-      console.log(JSON.stringify(parsedData.error));
       throw new Error("Invalid data");
+    }
+
+    const productNameExists = await prisma.product.findFirst({
+      where: { name: parsedData.data.name, storeId: storeId },
+    });
+
+    if (productNameExists) {
+      throw new Error("product name already exists");
     }
 
     return await prisma.product.create({
